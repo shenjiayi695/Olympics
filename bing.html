@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ECharts</title>
+    <!-- 引入 echarts.js -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+      #main {
+        width: 100%;
+        height: 600px;
+      }
+      h1 {
+        margin: 20px;
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>中国奥运会金银铜得奖情况</h1>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main"></div>
+    <script type="text/javascript">
+      // Initialize after dom ready
+      var myChart = echarts.init(document.getElementById("main"));
+
+      setTimeout(function () {
+        option = {
+          legend: {},
+          color: ["#FFFF00", "#D6D6D6", "#CD853F"],
+          tooltip: { trigger: "axis" },
+          dataset: {
+            source: [
+              [
+                "product",
+                "1984",
+                "1992",
+                "1996",
+                "2000",
+                "2004",
+                "2008",
+                "2012",
+                "2016",
+                "2020",
+              ],
+              ["金牌", 15, 16, 16, 28, 32, 48, 39, 26, 38],
+              ["银牌", 8, 22, 22, 16, 17, 22, 31, 18, 32],
+              ["铜牌", 9, 16, 12, 14, 14, 30, 22, 26, 19],
+            ],
+          },
+          xAxis: { type: "category" },
+          yAxis: { gridIndex: 0 },
+          grid: { top: "55%" },
+          series: [
+            {
+              type: "line",
+              smooth: true,
+              seriesLayoutBy: "row",
+              emphasis: { focus: "series" },
+            },
+            {
+              type: "line",
+              smooth: true,
+              seriesLayoutBy: "row",
+              emphasis: { focus: "series" },
+            },
+            {
+              type: "line",
+              smooth: true,
+              seriesLayoutBy: "row",
+              emphasis: { focus: "series" },
+            },
+            {
+              type: "pie",
+              id: "pie",
+              radius: "30%",
+              center: ["50%", "25%"],
+              emphasis: { focus: "self" },
+              label: { formatter: "{b}: {@1984} ({d}%)" },
+              encode: { itemName: "product", value: "1984", tooltip: "1984" },
+            },
+          ],
+        };
+
+        myChart.on("updateAxisPointer", function (event) {
+          const xAxisInfo = event.axesInfo[0];
+          if (xAxisInfo) {
+            const dimension = xAxisInfo.value + 1;
+            myChart.setOption({
+              series: {
+                id: "pie",
+                label: {
+                  formatter: "{b}: {@[" + dimension + "]} ({d}%)",
+                },
+                encode: {
+                  value: dimension,
+                  tooltip: dimension,
+                },
+              },
+            });
+          }
+        });
+
+        myChart.setOption(option);
+      });
+    </script>
+  </body>
+</html>

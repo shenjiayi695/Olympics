@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Echarts 分年度层级环形图</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="main" style="width: 100%; height: 925px"></div>
+
+    <script>
+      // 从 data-5.json 文件中加载数据
+      fetch("data-5.json")
+        .then((response) => response.json())
+        .then((data) => {
+          // 根据年份分组数据
+          var yearData = {};
+          data.forEach((item) => {
+            if (!yearData[item.year]) {
+              yearData[item.year] = {
+                name: item.year,
+                children: [],
+              };
+            }
+            var categoryIndex = yearData[item.year].children.findIndex(
+              (c) => c.name === item.category
+            );
+            if (categoryIndex === -1) {
+              yearData[item.year].children.push({
+                name: item.category,
+                children: [],
+              });
+              categoryIndex = yearData[item.year].children.length - 1;
+            }
+            var projectIndex = yearData[item.year].children[
+              categoryIndex
+            ].children.findIndex((p) => p.name === item.project);
+            if (projectIndex === -1) {
+              yearData[item.year].children[categoryIndex].children.push({
+                name: item.project,
+                children: [],
+              });
+              projectIndex =
+                yearData[item.year].children[categoryIndex].children.length - 1;
+            }
+            yearData[item.year].children[categoryIndex].children[
+              projectIndex
+            ].children.push({
+              name: item.name,
+              value: parseInt(item.number),
+            });
+          });
+
+          var myChart = echarts.init(document.getElementById("main"));
+
+          var option = {
+            tooltip: {
+              trigger: "item",
+              formatter: "{b}: {c}",
+            },
+            legend: {
+              type: "scroll",
+              orient: "vertical",
+              right: 10,
+              top: 20,
+              bottom: 20,
+              data: Object.keys(yearData),
+            },
+            timeline: {
+              axisType: "category",
+              autoPlay: false,
+              playInterval: 2000,
+              data: Object.keys(yearData),
+              currentIndex: 0,
+              label: {
+                formatter: function (params) {
+                  return params.value;
+                },
+              },
+              top: "96%", // 将时间轴移动到下方
+            },
+            series: [
+              {
+                type: "sunburst",
+                radius: ["10%", "70%"], // 减小图表大小
+
+                data: yearData[Object.keys(yearData)[0]].children || [],
+                label: {
+                  rotate: "radial",
+                  formatter: "{b}",
+                },
+                levelPadding: 0,
+                levels: [
+                  {
+                    name: "年份",
+                    itemStyle: {
+                      color: "#e5c07b",
+                    },
+                    r0: "0%",
+                    r: "20%",
+                    label: {
+                      rotate: 0,
+                      formatter: "{b}",
+                    },
+                  },
+                  {
+                    name: "类别",
+                    itemStyle: {
+                      color: "#9ec8e0",
+                    },
+                    r0: "20%",
+                    r: "40%",
+                    label: {
+                      rotate: 0,
+                      formatter: "{b}",
+                      overflow: "none",
+                    },
+                  },
+                  {
+                    name: "项目",
+                    itemStyle: {
+                      color: "#c7c7c7",
+                    },
+                    r0: "40%",
+                    r: "70%",
+                    label: {
+                      alignTo: "edge",
+                      formatter: "{b}",
+                      distance: 15,
+                    },
+                  },
+                  {
+                    name: "人名",
+                    itemStyle: {
+                      color: "#98c379",
+                    },
+                    r0: "70%",
+                    r: "90%",
+                    label: {
+                      alignTo: "edge",
+                      formatter: "{b}",
+                      distance: 15,
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+
+          myChart.setOption(option);
+
+          // 监听时间轴变更事件
+          myChart.on("timelinechanged", function (params) {
+            option.series[0].data =
+              yearData[Object.keys(yearData)[params.currentIndex]].children;
+            myChart.setOption(option, true);
+          });
+        })
+        .catch((error) => {
+          console.error("Error loading data:", error);
+        });
+    </script>
+  </body>
+</html>

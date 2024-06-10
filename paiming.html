@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>柱状图</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      #chart {
+        width: 80%;
+        height: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chart"></div>
+
+    <script>
+      const countryColors = {
+  "澳大利亚": "#00008B",
+  "保加利亚": "#0072C6",
+  "波兰": "#DC143C",
+  "德国": "#000000", 
+  "东德": "#DD0000",
+  "俄罗斯": "#D52B1E",
+  "法国": "#002395",
+  "古巴": "#002A8F",
+  "韩国": "#0047AB",
+  "荷兰": "#AE1C28",
+  "混合队": "#CCCCCC",
+  "加拿大": "#FF0000",
+  "捷克斯洛伐克": "#11457E",
+  "罗马尼亚": "#002B7F",
+  "美国": "#B22234",
+  "南斯拉夫": "#C1072A",
+  "日本": "#BC002D",
+  "苏联": "#D52B1E",
+  "乌克兰": "#FFD700",
+  "西班牙": "#8C1AFF",
+  "西德": "#FFCE00",
+  "新西兰": "#00247D",
+  "匈牙利": "#DC143C",
+  "意大利": "#006847",
+  "英国": "#00247D",
+  "中国": "#FF0000"
+};
+
+
+      fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+          let currentYear = 1968;
+          const updateInterval = 4000; 
+
+          function updateChart() {
+            const currentIndex = Math.floor((new Date().getFullYear() - 1968) / 4);
+            const nextIndex = (currentIndex + 1) % Math.floor((2024 - 1968) / 4);
+            const nextYear = 1968 + nextIndex * 4;
+
+            const currentData = data
+              .filter(d => d.year === currentYear.toString())
+              .sort((a, b) => b.value - a.value)
+              .slice(0, 10);
+
+            const nextData = data
+              .filter(d => d.year === nextYear.toString())
+              .sort((a, b) => b.value - a.value)
+              .slice(0, 10);
+
+            const option = {
+              xAxis: {
+                type: 'category',
+                data: currentData.map(d => d.name),
+                axisLabel: {
+                  interval: 0, 
+                  ellipsis: true,
+                  formatter: function(value) {
+                    return '{a|' + value + '}';
+                  },
+                  rich: {
+                    a: {
+                      color: '#333',
+                      lineHeight: 30,
+                      align: 'center',
+                      verticalAlign: 'middle',
+                      padding: [0, 10, 0, 10]
+                    }
+                  }
+                }
+              },
+              yAxis: {
+                type: 'value',
+                min: 0,
+                max: function(value) {
+                  return Math.ceil(value.max * 1.2);
+                }
+              },
+              series: [
+                {
+                  data: currentData.map(d => d.value),
+                  type: 'bar',
+                  itemStyle: {
+                    color: function(params) {
+                      return countryColors[currentData[params.dataIndex].name] || '#999999';
+                    }
+                  },
+                  label: {
+                    show: true,
+                    position: 'top',
+                    formatter: '{c}' // 显示数量值
+                  },
+                  animationDelay: function (idx) {
+                    return idx * 100; // 从左侧进入
+                  }
+                }
+              ],
+              title: {
+                text: `${currentYear}年前十名`,
+                top: '5%'
+              },
+              animationDuration: 1000,
+              animationDurationUpdate: 1000,
+              animationEasing: 'linear',
+              animationEasingUpdate: 'linear'
+            };
+
+            const myChart = echarts.init(document.getElementById('chart'));
+            myChart.setOption(option);
+
+            setTimeout(() => {
+              currentYear += 4;
+              if (currentYear > 2024) {
+                currentYear = 1968;
+              }
+              updateChart();
+            }, updateInterval);
+          }
+
+          updateChart();
+        });
+    </script>
+  </body>
+</html> 

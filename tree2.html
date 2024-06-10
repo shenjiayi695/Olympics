@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tree Chart with Timeline</title>
+    <!-- 引入 ECharts 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <!-- 引入 jQuery 文件 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      #main {
+        width: 100%;
+        height: 600px;
+        margin-top: 50px; /* 调整布局往下移一点 */
+      }
+      h1 {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-size: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>中国历届奥运会获奖情况</h1>
+    <div id="main"></div>
+    <script>
+      var chartDom = document.getElementById("main");
+      var myChart = echarts.init(chartDom);
+      var option;
+
+      myChart.showLoading();
+
+      $.get("jiangpaidezhu.json", function (data) {
+        myChart.hideLoading();
+
+        // 数据转换函数
+        function transformData(data) {
+          let yearMap = {};
+
+          data.forEach((entry) => {
+            let year = entry["年份"];
+            let olympicId = entry["奥运会id"]; // 假设这是奥运会ID的字段名称
+            let event = entry["获奖项目"];
+            let winner = entry["获奖人"];
+            let count = entry["获奖数目"];
+            let iconPath = entry["图标路径"]; // 假设这是图标路径的字段名称
+
+            if (!yearMap[year]) {
+              yearMap[year] = { name: `${year}年${olympicId}`, children: [] };
+            }
+
+            let yearNode = yearMap[year];
+            let eventNode = yearNode.children.find(
+              (child) => child.name === event
+            );
+
+            if (!eventNode) {
+              eventNode = {
+                name: event,
+                children: [],
+                symbol: `image://${iconPath}`,
+                symbolSize: [30, 30],
+              }; // 为事件节点添加图标，并设置图标大小为 30
+              yearNode.children.push(eventNode);
+            }
+
+            eventNode.children.push({ name: `${winner} (${count})` });
+          });
+
+          return yearMap;
+        }
+
+        var yearMap = transformData(data);
+        var years = Object.keys(yearMap);
+        var options = years.map((year) => ({
+          series: [
+            {
+              data: [yearMap[year]],
+            },
+          ],
+          // 在每个时间点显示相应的奥运会图标
+          graphic: {
+            type: "image",
+            left: "15",
+            top: "10",
+            z: 100,
+            style: {
+              image: `icon/${year}.png`, // 假设每届奥运会图标命名为年份.png
+              width: 200,
+              height: 200,
+            },
+          },
+        }));
+
+        option = {
+          baseOption: {
+            timeline: {
+              axisType: "category",
+              autoPlay: true,
+              playInterval: 3000,
+              bottom: -8, // 调整时间轴的位置，向下移动
+              data: years,
+            },
+            tooltip: {
+              trigger: "item",
+              triggerOn: "mousemove",
+            },
+            series: [
+              {
+                type: "tree",
+                data: [yearMap[years[0]]],
+                left: "7%",
+                right: "15%", // 增加右侧边距
+                top: "1%", // 调整树状图的顶部位置
+                bottom: "10%", // 调整树状图的底部位置，以留出空间给时间轴
+                symbol: "emptyCircle",
+                orient: "LR",
+                expandAndCollapse: true,
+                label: {
+                  position: "right",
+                  verticalAlign: "middle",
+                  align: "left",
+                  fontSize: 12, // 调整字体大小
+                },
+                leaves: {
+                  label: {
+                    position: "right",
+                    verticalAlign: "middle",
+                    align: "left",
+                    fontSize: 12, // 调整字体大小
+                  },
+                },
+                emphasis: {
+                  focus: "descendant",
+                },
+                animationDurationUpdate: 750,
+                initialTreeDepth: 2, // 设置初始展开深度
+                lineStyle: {
+                  curveness: 0.5, // 调整曲线的弯曲度
+                },
+                layout: "orthogonal", // 使用正交布局
+                nodePadding: 150, // 调整节点之间的间距（增加填充）
+                symbolSize: 7, // 调整节点大小
+              },
+            ],
+          },
+          options: options,
+        };
+
+        myChart.setOption(option);
+      });
+    </script>
+  </body>
+</html>

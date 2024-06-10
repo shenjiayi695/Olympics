@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>奥雪凝霜</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url('https://pic.616pic.com/ys_bnew_img/00/24/10/oe8Y9ekOdL.jpg');
+      background-size: 100% 100%;
+      background-position: center;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #main {
+      width: 1200px; /* 调整折线图宽度 */
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1>奥运会中的中国故事</h1>
+    <div id="main"></div>
+  </div>
+
+  <script>
+    var chartDom = document.getElementById("main");
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    var dataLinks = {
+      1896: "https://baijiahao.baidu.com/s?id=1724182512715330821&wfr=spider&for=pc",
+      1932: "https://www.sohu.com/a/244062466_100028727",
+      1984: "https://mzt.fujian.gov.cn/ztzl/dsxxjy/zggcdbnsj/202107/t20210730_5657851.htm",
+      1988:"https://baijiahao.baidu.com/s?id=1795316687548065499&wfr=spider&for=pc",
+      1992:"https://baijiahao.baidu.com/s?id=1719844491639114792&wfr=spider&for=pc",
+      1996:"https://baijiahao.baidu.com/s?id=1705824489616176840&wfr=spider&for=pc",
+      2000:"https://baijiahao.baidu.com/s?id=1695367720241770562&wfr=spider&for=pc",
+      2004:"https://baijiahao.baidu.com/s?id=1679158066292320154&wfr=spider&for=pc",
+      2008: "https://baike.baidu.com/item/2008%E5%B9%B4%E5%8C%97%E4%BA%AC%E5%A5%A5%E8%BF%90%E4%BC%9A/329733?fr=ge_ala",
+      2012:"https://baike.baidu.com/item/2012%E5%B9%B4%E4%BC%A6%E6%95%A6%E5%A5%A5%E8%BF%90%E4%BC%9A%E4%B8%AD%E5%9B%BD%E4%BD%93%E8%82%B2%E4%BB%A3%E8%A1%A8%E5%9B%A2/8456671?fr=aladdin",
+      2016:"https://mp.weixin.qq.com/s?__biz=MzIyMTIyNDM2NQ==&mid=2651155853&idx=5&sn=d938534bd63d372faf103997dea6d9c9&chksm=8c31c14fbb464859e74c9abc572624dfa976f87c1db5047d8f0f3356a24b3cbafce91461ca1a&scene=27",
+      2020:"https://2020.cctv.com/",
+    };
+
+    option = {
+      xAxis: {
+        type: "category",
+        data: [
+          "1896",
+          "1932",
+          "1984",
+          "1992",
+          "1996",
+          "2000",
+          "2004",
+          "2008",
+          "2012",
+          "2016",
+          "2020",
+        ],
+      },
+      yAxis: {
+        type: "value",
+      },
+      series: [
+  {
+    name: '金牌',
+    data: [0, 0, 15, 16, 16, 28, 32, 48, 39, 26, 38],
+    type: "line",
+    label: {
+      show: true,
+      position: "top",
+      color: "#f9d71c",
+    }
+  },
+  {
+    name: '银牌',
+    data: [0, 0, 8, 22, 22, 16, 17, 22, 31, 18, 32],
+    type: "line",
+    label: {
+      show: true,
+      position: "top",
+      color: "#c0c0c0",
+    }
+  },
+  {
+    name: '铜牌',
+    data: [0, 0, 9, 16, 12, 14, 14, 30, 22, 26, 19],
+    type: "line",
+    label: {
+      show: true,
+      position: "top",
+      color: "#cd7f32",
+    }
+  }
+],
+      toolbox: {
+        feature: {
+          dataZoom: {
+            yAxisIndex: "none",
+          },
+          restore: {},
+          saveAsImage: {},
+        },
+      },
+      dataZoom: [
+        {
+          type: "inside",
+          start: 0,
+          end: 100,
+        },
+        {
+          start: 0,
+          end: 100,
+        },
+      ],
+    };
+
+    myChart.setOption(option);
+
+    myChart.on("click", function (params) {
+      var year = params.name;
+      if (dataLinks[year]) {
+        window.open(dataLinks[year], "_blank");
+      }
+    });
+  </script>
+</body>
+</html>
