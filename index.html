@@ -1,119 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Olympic Rings</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f0f0f0;
-      margin: 0;
-      padding: 0;
-      background-image: "./icon/beijing.png";
-      background-size: 100% 100%;
-      background-position: center;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    svg {
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <h1 style="position: absolute;top: 10%;font-size: 40px;">“奥雪凝霜”——中国奥运会征程可视化</h1>
-  <svg width="1000" height="700" viewBox="0 0 400 200">
-    <!-- Blue Ring -->
-    <circle
-      cx="70"
-      cy="70"
-      r="50"
-      stroke="#0072CE"
-      stroke-width="10"
-      fill="none"
-      onmouseover="showTooltip('历届奥运会金牌数前十国家（动态柱状图）')"
-      onclick="navigateTo('paiming.html')"
-    />
-    <!-- Black Ring -->
-    <circle
-      cx="200"
-      cy="70"
-      r="50"
-      stroke="#000000"
-      stroke-width="10"
-      fill="none"
-      onmouseover="showTooltip('历届奥运会中国金银铜牌得奖情况（饼状图、折线图）')"
-      onclick="navigateTo('bing.html')"
-    />
-    <!-- Red Ring -->
-    <circle
-      cx="330"
-      cy="70"
-      r="50"
-      stroke="#EF3340"
-      stroke-width="10"
-      fill="none"
-      onmouseover="showTooltip('奥运会中的中国故事（折线图）')"
-      onclick="navigateTo('gushi.html')"
-    />
-    <!-- Yellow Ring -->
-    <circle
-      cx="135"
-      cy="130"
-      r="50"
-      stroke="#F4C300"
-      stroke-width="10"
-      fill="none"
-      onmouseover="showTooltip('中国历届奥运会运动员获奖情况（树状图）')"
-      onclick="navigateTo('tree2.html')"
-    />
-    <!-- Green Ring -->
-    <circle
-      cx="265"
-      cy="130"
-      r="50"
-      stroke="#009739"
-      stroke-width="10"
-      fill="none"
-      onmouseover="showTooltip('历届奥运会中国获奖项目分布及人员（旭日图）')"
-      onclick="navigateTo('youlie.html')"
-    />
-  </svg>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Olympic Rings</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+        background-image: url("https://img1.baidu.com/it/u=1159212290,2482130659&fm=253&fmt=auto&app=138&f=PNG?w=860&h=367");
+        background-size: 100% 100%;
+        background-position: center;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      svg {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="position: absolute; top: 10%; font-size: 40px">
+      “奥雪凝霜”——中国奥运会征程可视化
+    </h1>
+    <svg width="1000" height="700" viewBox="0 0 400 200">
+      <!-- Blue Ring -->
+      <circle
+        cx="70"
+        cy="70"
+        r="50"
+        stroke="#0072CE"
+        stroke-width="10"
+        fill="none"
+        onmouseover="showTooltip('历届奥运会金牌数前十国家（动态柱状图）')"
+        onclick="navigateTo('paiming.html')"
+      />
+      <!-- Black Ring -->
+      <circle
+        cx="200"
+        cy="70"
+        r="50"
+        stroke="#000000"
+        stroke-width="10"
+        fill="none"
+        onmouseover="showTooltip('历届奥运会中国金银铜牌得奖情况（饼状图、折线图）')"
+        onclick="navigateTo('bing.html')"
+      />
+      <!-- Red Ring -->
+      <circle
+        cx="330"
+        cy="70"
+        r="50"
+        stroke="#EF3340"
+        stroke-width="10"
+        fill="none"
+        onmouseover="showTooltip('奥运会中的中国故事（折线图）')"
+        onclick="navigateTo('gushi.html')"
+      />
+      <!-- Yellow Ring -->
+      <circle
+        cx="135"
+        cy="130"
+        r="50"
+        stroke="#F4C300"
+        stroke-width="10"
+        fill="none"
+        onmouseover="showTooltip('中国历届奥运会运动员获奖情况（树状图）')"
+        onclick="navigateTo('tree2.html')"
+      />
+      <!-- Green Ring -->
+      <circle
+        cx="265"
+        cy="130"
+        r="50"
+        stroke="#009739"
+        stroke-width="10"
+        fill="none"
+        onmouseover="showTooltip('历届奥运会中国获奖项目分布及人员（旭日图）')"
+        onclick="navigateTo('youlie.html')"
+      />
+    </svg>
 
-  <script>
-    function showTooltip(text) {
-      // 创建一个弹窗元素
-      const tooltip = document.createElement('div');
-      tooltip.textContent = text;
-      tooltip.style.position = 'absolute';
-      tooltip.style.top = event.clientY + 'px';
-      tooltip.style.left = event.clientX + 'px';
-      tooltip.style.background = 'rgba(0, 0, 0, 0.8)';
-      tooltip.style.color = '#fff';
-      tooltip.style.padding = '5px 10px';
-      tooltip.style.borderRadius = '5px';
-      tooltip.style.zIndex = '9999';
-      
-      // 添加到 body 中
-      document.body.appendChild(tooltip);
+    <script>
+      function showTooltip(text) {
+        // 创建一个弹窗元素
+        const tooltip = document.createElement("div");
+        tooltip.textContent = text;
+        tooltip.style.position = "absolute";
+        tooltip.style.top = event.clientY + "px";
+        tooltip.style.left = event.clientX + "px";
+        tooltip.style.background = "rgba(0, 0, 0, 0.8)";
+        tooltip.style.color = "#fff";
+        tooltip.style.padding = "5px 10px";
+        tooltip.style.borderRadius = "5px";
+        tooltip.style.zIndex = "9999";
 
-      // 鼠标移出时移除弹窗
-      event.target.addEventListener('mouseout', () => {
-        document.body.removeChild(tooltip);
-      });
-    }
+        // 添加到 body 中
+        document.body.appendChild(tooltip);
 
-    function navigateTo(url) {
-      // 在新页面中打开链接
-      window.open(url, '_blank');
-    }
-  </script>
+        // 鼠标移出时移除弹窗
+        event.target.addEventListener("mouseout", () => {
+          document.body.removeChild(tooltip);
+        });
+      }
 
-</body>
+      function navigateTo(url) {
+        // 在新页面中打开链接
+        window.open(url, "_blank");
+      }
+    </script>
+  </body>
 </html>
